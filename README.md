@@ -33,4 +33,4 @@ Open Rviz, load "map" and "Robotmodel" and use "Initial pose estimate" to locate
 rosrun waypoint_planner waypoint_planner
 ```
 
-Now you can build your path in Rviz by specifying waypoints with "Publish point" and goal position with "2D Nav goal".
+Now you can build your path in Rviz by specifying waypoints with "Publish point" and eventually set a goal position with "2D Nav goal".
