@@ -14,20 +14,16 @@ using namespace std;
 #include "sensor_msgs/LaserScan.h"
 
 class SubscribeAndPublish {
-public:
-  SubscribeAndPublish()  {
-    //pub_goal = n.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 1);
-    //sub_pose = n.subscribe("odom", 1, &SubscribeAndPublish::callback_pose, this);
-    pub_vel = n.advertise<geometry_msgs::Twist>("/cmd_vel" ,1);
-    sub_point = n.subscribe("clicked_point", 10, &SubscribeAndPublish::callback_point, this);
-    sub_goal = n.subscribe("move_base_simple/goal", 10, &SubscribeAndPublish::callback_goal, this);
-    sub_scan = n.subscribe("scan", 1, &SubscribeAndPublish::checkForObstacle, this);
-  }
+  public:
+    SubscribeAndPublish()  {
+      pub_vel = n.advertise<geometry_msgs::Twist>("/cmd_vel" ,1);
+      sub_point = n.subscribe("clicked_point", 10, &SubscribeAndPublish::callback_point, this);
+      sub_goal = n.subscribe("move_base_simple/goal", 10, &SubscribeAndPublish::callback_goal, this);
+      sub_scan = n.subscribe("scan", 1, &SubscribeAndPublish::checkForObstacle, this);
+    }
 
   private:
     ros::NodeHandle n;
-    //ros::Publisher pub_goal;
-    //ros::Subscriber sub_pose;
     ros::Publisher pub_vel;
     ros::Subscriber sub_point;
     ros::Subscriber sub_goal;
@@ -287,7 +283,6 @@ void SubscribeAndPublish::stop(){ //makes the robot stop at goal position
 
   pub_vel.publish(msg);
 }
-
 
 int main(int argc, char *argv[]) {
 
