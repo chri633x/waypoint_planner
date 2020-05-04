@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>waypoint_planner</name>
+  <version>0.0.0</version>
+  <description>Local planner for TurtleBot3 that navigates through specified waypoints to a goal position.</description>
+
+  <maintainer email="christoffer@todo.todo">christoffer</maintainer>
+
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>
