@@ -159,16 +159,7 @@ void SubscribeAndPublish::sendCommands(float goal_x, float goal_y){ //sends line
   float vel_ang;
 
   float goal_yaw = atan2 (goal_y-current_y, goal_x-current_x); //desired orientation in RPY radians
-
-  //convert current orientation in quaternions to RPY (only Yaw is needed)
-  tf::Quaternion q_current(
-      0,
-      0,
-      current_z,
-      current_w);
-  tf::Matrix3x3 m(q_current);
-  double roll, pitch, current_yaw;
-  m.getRPY(roll, pitch, current_yaw); //convert to RPY
+  float current_yaw = atan2(2.0*current_w*current_z, current_w*current_w - current_z*current_z);  //convert current orientation in quaternions to RPY (only Yaw is needed)
 
   //avoid weird rotation when current_yaw goes from Pi to -Pi
   if (current_yaw<0){
@@ -206,25 +197,8 @@ float SubscribeAndPublish::correctOrientationAtGoal(float goal_w, float goal_z){
 
   float vel_ang;       //velocity variable
 
-  //convert current orientation in quaternions to RPY (only Yaw is needed)
-  tf::Quaternion q_current(
-      0,
-      0,
-      current_z,
-      current_w);
-  tf::Matrix3x3 m_current(q_current);
-
-  //convert goal orientation in quaternions to RPY (only Yaw is needed)
-  tf::Quaternion q_goal(
-      0,
-      0,
-      goal_z,
-      goal_w);
-  tf::Matrix3x3 m_goal(q_goal);
-
-  double roll, pitch, current_yaw, goal_yaw;
-  m_current.getRPY(roll, pitch, current_yaw); //convert to RPY
-  m_goal.getRPY(roll, pitch, goal_yaw); //convert to RPY
+  float current_yaw = atan2(2.0*current_w*current_z, current_w*current_w - current_z*current_z);  //convert current orientation in quaternions to RPY (only Yaw is needed)
+  float goal_yaw = atan2(2.0*goal_w*goal_z, goal_w*goal_w - goal_z*goal_z);  //convert goal orientation in quaternions to RPY (only Yaw is needed)
 
   //avoid weird rotation when current_yaw goes from Pi to -Pi
   if (current_yaw<0){
