@@ -37,8 +37,11 @@ class SubscribeAndPublish {
     vector<Point> points; //vector storing all waypoints and goal position
 
     //parameters
-    float k_p_lin = 0.0775; //linear velocity gain
-    float k_p_ang = 1.1; //angular velocity gain
+    float ang_vel_max = 2.84; //upper limit for angular velocity for Turtlebot3
+    float lin_vel_max = 0.22; //upper limit for linear velocity for Turtlebot3
+  
+    float k_p_lin = lin_vel_max/ang_vel_max; //linear velocity gain
+    float k_p_ang = M_PI/ang_vel_max; //angular velocity gain
     bool obstacle = false; //boolean variable that keeps track of if an obstacle is in front of the robot
     int view = 40; //the robot's sight in degrees for obstacle detection (must be an even number!). 40 degrees means 20 degrees of sight to each side
     float safety_dist = 0.5; //safety distance to obstacles
@@ -182,10 +185,10 @@ void SubscribeAndPublish::sendCommands(float goal_x, float goal_y){ //sends line
     vel_ang = -diff * k_p_ang;
   }
 
-  vel_lin = abs((2.84-abs(vel_ang)))*k_p_lin; //the less angular velocity, the more linear velocity (P-controller)
+  vel_lin = abs((ang_vel_max-abs(vel_ang)))*k_p_lin; //the less angular velocity, the more linear velocity (P-controller)
 
-  msg.linear.x = vel_lin; //0.22 maximum
-  msg.angular.z = vel_ang; //2.84 maximum
+  msg.linear.x = vel_lin;
+  msg.angular.z = vel_ang;
 
   pub_vel.publish(msg); //publish velocities
 }
@@ -221,8 +224,8 @@ float SubscribeAndPublish::correctOrientationAtGoal(float goal_w, float goal_z){
     vel_ang = -diff * k_p_ang;
   }
 
-  msg.linear.x = 0.0; //0.22 maximum
-  msg.angular.z = vel_ang; //2.84 maximum
+  msg.linear.x = 0.0;
+  msg.angular.z = vel_ang;
 
   pub_vel.publish(msg); //publish velocities
 
