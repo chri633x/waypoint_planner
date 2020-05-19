@@ -42,6 +42,9 @@ class SubscribeAndPublish {
     bool obstacle = false; //boolean variable that keeps track of if an obstacle is in front of the robot
     int view = 40; //the robot's sight in degrees for obstacle detection (must be an even number!). 40 degrees means 20 degrees of sight to each side
     float safety_dist = 0.5; //safety distance to obstacles
+    float goal_orientation_tolerance = 0.087; //the orientation at goal must be within 5 degrees
+    float goal_distance_tolerance = 0.05; //the distance to goal should be below 5 cm
+    float waypoint_distance_tolerance = 0.10; //the distance to waypoints should be below 10 cm
 
     tf::StampedTransform get_transform(); //transform from "base_footprint" to "map"
     void callback_point(const geometry_msgs::PointStamped::ConstPtr& msg); //receives points from "publish point" in rviz
@@ -90,7 +93,7 @@ void SubscribeAndPublish::callback_goal(const geometry_msgs::PoseStamped::ConstP
 
          ROS_INFO("Moving towards point: %i", i+1);
 
-         while(getDist(points[i].x, points[i].y)>0.10){ //The next waypoint goal should not be set before the robot is closer than 10 cm to current waypoint goal
+         while(getDist(points[i].x, points[i].y)>waypoint_distance_tolerance){ //The next waypoint goal should not be set before the robot is closer than 10 cm to current waypoint goal
 
             ros::spinOnce(); //update callbacks (for scan information)
 
@@ -105,13 +108,13 @@ void SubscribeAndPublish::callback_goal(const geometry_msgs::PoseStamped::ConstP
          };
 
          if (i==points.size()-1){ //stop at the last element in vector (goal position)
-             while(getDist(points[i].x, points[i].y)>0.05){ //The robot must be within a distance of 5 cm to the goal
+             while(getDist(points[i].x, points[i].y)>goal_distance_tolerance){ //The robot must be within a distance of 5 cm to the goal
                sendCommands(points[i].x, points[i].y);
                usleep(100000); //10 hz
              };
              ROS_INFO("Correcting orientation at goal");
 
-             while(abs(correctOrientationAtGoal(goal_w, goal_z))>0.087){ //the orientation at goal must be within 5 degrees
+             while(abs(correctOrientationAtGoal(goal_w, goal_z))>goal_orientation_tolerance){ //the orientation at goal must be within 5 degrees
                usleep(100000); //10 hz
              };
 
